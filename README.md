@@ -1,0 +1,2 @@
+# fastz
+ZINC, but fast
