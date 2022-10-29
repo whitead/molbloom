@@ -24,4 +24,4 @@ echo "Resetting Filter"
 rm -rf main.bloom
 
 echo "Building Filter"
-./fastz-bloom $f 2000 zinc20 1006651037 `ls ${ZINC_DIR}/ZINC20_smiles_chunk_*/smiles_all_*.txt`
+./molbloom $f 2000 zinc20 1006651037 `ls ${ZINC_DIR}/ZINC20_smiles_chunk_*/smiles_all_*.txt`

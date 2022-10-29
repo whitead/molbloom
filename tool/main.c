@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
   bloom_t *b;
   unsigned int i = 0;
 
-  printf("Info: You are running version %s of fastz\n", VERSION);
+  printf("Info: You are running version %s of molbloom\n", VERSION);
   size = (uint64_t)(atof(argv[1]) * 1024 * 1024 * 8);
   name = argv[2];
   ofile = strdup(name);
