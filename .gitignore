@@ -127,3 +127,66 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+#Emacs
+*~
+.#*
+#*
+
+#Cmake
+build/*
+
+#LaTeX
+*.aux
+*.log
+
+#Images
+*.png
+
+#Numpy
+*.npz
+
+#VScode
+*.vscode
+
+#pycache files
+__pycache__/
+
+sphinx-docs/docs_out/**
+
+#jupyter notebooks
+
+*.ipynb_checkpoints
+
+# unwanted trajectories
+*.dcd
