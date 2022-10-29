@@ -13,7 +13,7 @@ def _load_filter():
         filter = BloomFilter(str(ap))
 
 
-def purchasable(smiles, canonicalize=False):
+def buy(smiles, canonicalize=False):
     _load_filter()
     if canonicalize:
         try:
