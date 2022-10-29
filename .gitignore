@@ -190,3 +190,7 @@ sphinx-docs/docs_out/**
 
 # unwanted trajectories
 *.dcd
+
+tool/fastz-bloom
+fastz/bloom.c
+*.bloom
