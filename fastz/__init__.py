@@ -9,7 +9,7 @@ filter = None
 def _load_filter():
     global filter
     if filter is None:
-        ap = files(fastz.filters).joinpath("main.bloom")
+        ap = files(fastz.filters).joinpath("zinc20.bloom")
         filter = BloomFilter(str(ap))
 
 
