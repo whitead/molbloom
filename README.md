@@ -1,6 +1,6 @@
 # fastz
 
-Can I buy this molecule? Results in 0.1ms or your money back.
+Can I buy this molecule? Returns results in about 500 ns and consumes about 1 GB of memory.
 
 ```py
 

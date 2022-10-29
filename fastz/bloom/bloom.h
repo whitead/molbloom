@@ -20,24 +20,30 @@ uint64_t FNV1a(const char *str)
   return hash;
 }
 
+// just changed constants
+uint64_t FNV1ab(const char *str)
+{
+  uint64_t hash = 6281386704453804504ULL;
+  for (int i = 0; str[i]; i++)
+  {
+    hash ^= str[i];
+    hash *= 245453790232ULL;
+  }
+  return hash;
+}
+
 // bloom filter data
 typedef struct
 {
   uint32_t k;    // number of hash functions
-  uint32_t m;    // size of bit array
+  uint64_t m;    // size of bit array
   char name[32]; // name of filter
   char *data;
 } bloom_t;
 
 // create a new bloom filter
-bloom_t *bloom_new(uint32_t size, uint32_t n, const char *name)
+bloom_t *bloom_new(uint64_t size, uint64_t n, const char *name)
 {
-  // check we can index with uint32_t
-  if (size > 0xffffffff)
-  {
-    fprintf(stderr, "bloom_new: size too large\n");
-    return NULL;
-  }
 
   bloom_t *b = malloc(sizeof(bloom_t));
   b->m = size;
@@ -54,10 +60,10 @@ bloom_t *bloom_new(uint32_t size, uint32_t n, const char *name)
   }
 
   // compute number of hash functions
-  b->k = max(8, min(32, (char)(b->m / n * log(2))));
+  b->k = max(8, min(64, (char)(b->m / n * log(2))));
 
   // print info and false positive rate
-  printf("bloom_new: %s size=%u bits, MB=%2f, n=%u k=%u fp=%f\n", b->name, b->m,
+  printf("bloom_new: %s size=%lu bits, MB=%2f, n=%lu k=%u fp=%f\n", b->name, b->m,
          ((float)b->m) / 1024 / 1024 / 8, n, b->k,
          pow(1 - exp(-(float)(b->k * n) / (b->m)), b->k));
 
@@ -74,11 +80,10 @@ void bloom_free(bloom_t *b)
 // add a string to a bloom filter
 void bloom_add(bloom_t *b, char *s)
 {
-  uint64_t h = FNV1a(s);
-  // split into two 32 bit hashes
-  uint32_t h1 = h & 0xffffffff;
-  uint32_t h2 = h >> 32;
-  for (uint i = 0; i < b->k; i++)
+  uint64_t h;
+  uint64_t h1 = FNV1a(s);
+  uint64_t h2 = FNV1ab(s);
+  for (unsigned int i = 0; i < b->k; i++)
   {
     // Building a Better Bloom Filter
     h = (h1 + i * h2) % b->m;
@@ -89,12 +94,12 @@ void bloom_add(bloom_t *b, char *s)
 // check if a string is in a bloom filter
 int bloom_check(bloom_t *b, char *s)
 {
-  uint64_t h = FNV1a(s);
-  // split into two 32 bit hashes
-  uint32_t h1 = h & 0xffffffff;
-  uint32_t h2 = h >> 32;
-  for (uint i = 0; i < b->k; i++)
+  uint64_t h;
+  uint64_t h1 = FNV1a(s);
+  uint64_t h2 = FNV1ab(s);
+  for (unsigned int i = 0; i < b->k; i++)
   {
+    // Building a Better Bloom Filter
     h = (h1 + i * h2) % b->m;
     if (!(b->data[h / 8] & (1 << (h % 8))))
       return 0;
@@ -111,8 +116,8 @@ void bloom_write(bloom_t *b, char *filename)
   // write version
   putc(FILE_VERSION, f);
   // write k and m
-  fwrite(&b->k, sizeof(u_int32_t), 1, f);
-  fwrite(&b->m, sizeof(u_int32_t), 1, f);
+  fwrite(&b->k, sizeof(uint32_t), 1, f);
+  fwrite(&b->m, sizeof(uint64_t), 1, f);
   fwrite(b->data, 1, b->m / 8, f);
   fclose(f);
 }
@@ -133,9 +138,10 @@ bloom_t *bloom_read(char *filename)
     fprintf(stderr, "bloom_read: invalid version number\n");
     return NULL;
   }
-  uint32_t k, m;
+  uint32_t k;
+  uint64_t m;
   fread(&k, sizeof(uint32_t), 1, f);
-  fread(&m, sizeof(uint32_t), 1, f);
+  fread(&m, sizeof(uint64_t), 1, f);
   bloom_t *b = malloc(sizeof(bloom_t));
   b->k = k;
   b->m = m;
@@ -143,7 +149,7 @@ bloom_t *bloom_read(char *filename)
   fread(b->data, 1, m / 8, f);
   fclose(f);
 
-  printf("bloom_read: %s size=%u bits, MB=%2f, k=%u\n", b->name, b->m,
+  printf("bloom_read: %s size=%lu bits, MB=%2f, k=%u\n", b->name, b->m,
          ((float)b->m) / 1024 / 1024 / 8, b->k);
   return b;
 }
