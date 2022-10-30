@@ -71,6 +71,9 @@ def test_build_custom():
     """Build a custom filter"""
     bf = molbloom.CustomFilter(100, 1000, "test")
     bf.add("CCCO")
+    # canonicalize
+    s = molbloom.canon("CCCOC")
+    bf.add(s)
     assert "CCCO" in bf
     assert "CCCOO" not in bf
     bf.save("test.bloom")

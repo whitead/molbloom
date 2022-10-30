@@ -57,10 +57,12 @@ where $M$ is the size in bits, $N$ is the number of compounds, and $\epsilon$ is
 ### Build with Python
 
 ```py
-from molbloom import CustomFilter
+from molbloom import CustomFilter, canon
 bf = CustomFilter(100, 1000, 'myfilter')
 bf.add('CCCO')
-
+# canonicalize one
+s = canon("CCCOC")
+bf.add(s)
 # save it
 bf.save('test.bloom')
 ```

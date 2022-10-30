@@ -51,6 +51,14 @@ def _load_filter(name):
             _load_big_filter(name)
 
 
+def canon(smiles):
+    try:
+        from rdkit import Chem
+    except ImportError:
+        raise ImportError("To canonicalize SMILES, rdkit is required.")
+    return Chem.MolToSmiles(Chem.MolFromSmiles(smiles), canonical=True)
+
+
 def buy(smiles, instock=True, canonicalize=False):
     if instock:
         name = "instock"
@@ -58,9 +66,5 @@ def buy(smiles, instock=True, canonicalize=False):
         name = "zinc20"
     _load_filter(name)
     if canonicalize:
-        try:
-            from rdkit import Chem
-        except ImportError:
-            raise ImportError("To canonicalize SMILES, rdkit is required.")
-        smiles = Chem.MolToSmiles(Chem.MolFromSmiles(smiles), canonical=True)
+        smiles = canon(smiles)
     return smiles in filters[name]
