@@ -1,3 +1,4 @@
 rdkit
 pytest
 pre-commit
+cython
