@@ -1,5 +1,4 @@
 from .version import __version__
-import molbloom.filters
 from molbloom.bloom import BloomFilter
 import os
 
