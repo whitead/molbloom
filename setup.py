@@ -1,3 +1,4 @@
+from gettext import install
 from setuptools import Extension, setup
 from Cython.Build import cythonize
 
@@ -25,6 +26,7 @@ setup(
     author_email="andrew.white@rochester.edu",
     url="https://whitead.github.io/molbloom/",
     license="MIT",
+    install_requires=["cython"],
     packages=["molbloom"],
     long_description=long_description,
     long_description_content_type="text/markdown",
