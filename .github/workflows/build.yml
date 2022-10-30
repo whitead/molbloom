@@ -20,11 +20,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build wheels
-      uses: pypa/cibuildwheel@v2.11.2
-    - uses: actions/upload-artifact@v3
-      with:
-        path: ./wheelhouse/*.whl
+    # - name: Build wheels
+    #   uses: pypa/cibuildwheel@v2.11.2
+    # - uses: actions/upload-artifact@v3
+    #   with:
+    #     path: ./wheelhouse/*.whl
     - name: Build a source tarball
       run: |
         pip install build

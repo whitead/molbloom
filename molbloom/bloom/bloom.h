@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define VERSION "0.1.1"
+#define VERSION "0.1.2"
 #define FILE_VERSION 1u
 #define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define max(X, Y) (((X) > (Y)) ? (X) : (Y))
@@ -52,6 +52,8 @@ bloom_t *bloom_new(uint64_t size, uint64_t n, const char *name)
   if (strlen(name) > 32)
   {
     fprintf(stderr, "bloom_new: name too long\n");
+    free(b->data);
+    free(b);
     return NULL;
   }
   else
@@ -130,22 +132,24 @@ bloom_t *bloom_read(char *filename)
   if (strcmp(magic, "BLOOM") != 0)
   {
     fprintf(stderr, "bloom_read: invalid magic number\n");
+    fclose(f);
     return NULL;
   }
-  uint8_t version = getc(f);
+  char version = getc(f);
   if (version != FILE_VERSION)
   {
     fprintf(stderr, "bloom_read: invalid version number\n");
+    fclose(f);
     return NULL;
   }
   uint32_t k;
   uint64_t m;
   fread(&k, sizeof(uint32_t), 1, f);
   fread(&m, sizeof(uint64_t), 1, f);
-  bloom_t *b = malloc(sizeof(bloom_t));
+  bloom_t *b = (bloom_t *)malloc(sizeof(bloom_t));
   b->k = k;
   b->m = m;
-  b->data = malloc(m / 8);
+  b->data = (char *)malloc(m / 8);
   strcpy(b->name, "loaded bloom filter");
   fread(b->data, 1, m / 8, f);
   fclose(f);

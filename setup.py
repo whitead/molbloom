@@ -20,6 +20,7 @@ setup(
             )
         ]
     ),
+    include_dirs=["molbloom/bloom"],
     version=__version__,
     description="Purchaseable SMILES filter",
     author="Andrew White",
