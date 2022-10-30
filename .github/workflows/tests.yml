@@ -34,4 +34,3 @@ jobs:
     - name: Run Test
       run: |
          pytest tests
-         mypy -p exmol --ignore-missing-imports

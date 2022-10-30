@@ -31,7 +31,6 @@ jobs:
     - name: Run Test
       run: |
          pytest tests
-         mypy -p exmol --ignore-missing-imports
     - name: Build a binary wheel and a source tarball
       run: |
         pip install build
