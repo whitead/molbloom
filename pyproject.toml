@@ -1,2 +1,6 @@
+[project]
+requires-python = ">=3.7"
+
 [build-system]
-requires = ["setuptools", "cython ~= 0.29.0", "wheel"]
+requires = ["setuptools >= 59.0", "cython ~= 0.29.0", "wheel"]
+requires-python = ">=3.7"
