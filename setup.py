@@ -1,6 +1,8 @@
 from gettext import install
 from setuptools import Extension, setup
 from Cython.Build import cythonize
+from ctypes.util import find_library
+import os
 
 exec(open("molbloom/version.py").read())
 
@@ -15,7 +17,7 @@ setup(
             Extension(
                 "molbloom.bloom",
                 ["molbloom/bloom.pyx"],
-                libraries=["m"],
+                libraries=[find_library("m") if os.name == "nt" else "m"],
                 include_dirs=["molbloom/bloom"],
             )
         ]
