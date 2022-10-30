@@ -2,8 +2,11 @@
 
 Can I buy this molecule? Returns results in about 500 ns and consumes about 100MB of RAM (or 2 GB if using all ZINC20).
 
-```py
+```sh
+pip install molbloom
+```
 
+```py
 from molbloom import buy
 buy('CCCO')
 # True
