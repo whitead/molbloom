@@ -1,5 +1,5 @@
 from .version import __version__
-from molbloom.bloom import BloomFilter
+from molbloom.bloom import BloomFilter, CustomFilter
 import os
 import molbloom.data
 from importlib_resources import files

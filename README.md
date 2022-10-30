@@ -23,9 +23,56 @@ buy('CCCO', instock=False)
 ```
 the reference for that is all ZINC20 from October 2021. *On first execution of `instock=False` it will download 2.0 GB of data to a cache directory.*
 
+# Querying Small World
+
 To find similar purchasable molecules,
 ```py
 buy_similar('CCCO')
 ```
 this will query [ZINC Small World](https://sw.docking.org/) defaulting to the *Enamine REAL-22Q1-4.5B* database and return a `pandas.DataFrame`.
 
+=======
+
+
+## Custom Filter
+
+Do you have your own list of SMILES? There are two ways to build a filter -- you can use a C tool that is very fast (1M / s) if your SMILES are in a file and already canonical. Or you can use the Python API to programmaticaly build a filter and canonicalize as you go. See below
+
+Once built:
+
+```py
+from molbloom import BloomFilter
+bf = BloomFilter('myfilter.bloom')
+# usage:
+'CCCO' in bf
+```
+
+### Build with C Tool
+
+You can build your own filter using the code in the `tool/` directory.
+
+```sh
+cd tool
+make
+./molbloom-bloom <MB of filter> <filter name> <approx number of compounds> <input file 1> <input file 2> ...
+```
+
+where each input file has SMILES on each line in the first column and is already canonicalized. The higher the MB, the lower the rate of false positives. If you want to choose the false positive rate rather than the size, you can use the equation:
+
+$$
+M = - \frac{N \ln \epsilon}{(\ln 2)^2}
+$$
+
+where $M$ is the size in bits, $N$ is the number of compounds, and $\epsilon$ is the false positive rate.
+
+### Build with Python
+
+```py
+from molbloom import CustomFilter
+bf = CustomFilter(100, 1000, 'myfilter')
+bf.add('CCCO')
+
+# save it
+bf.save('test.bloom')
+```
+>>>>>>> 39fb1ee7275f719b67edfc7d1c015eadcd271263
