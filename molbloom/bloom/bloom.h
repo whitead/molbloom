@@ -127,8 +127,9 @@ void bloom_write(bloom_t *b, char *filename)
 bloom_t *bloom_read(char *filename)
 {
   FILE *f = fopen(filename, "rb");
-  char magic[5];
+  char magic[6];
   fread(magic, 1, 5, f);
+  magic[5] = '\0';
   if (strcmp(magic, "BLOOM") != 0)
   {
     fprintf(stderr, "bloom_read: invalid magic number in %s (should be BLOOM, but was %s)\n", filename, magic);
