@@ -11,7 +11,12 @@ on:
 jobs:
   publish:
 
-    runs-on: ubuntu-latest
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        #os: [ubuntu-20.04, windows-2019, macos-11]
+        os: [ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v2
@@ -31,6 +36,11 @@ jobs:
     - name: Run Test
       run: |
          pytest tests
+    - name: Build wheels
+      uses: pypa/cibuildwheel@v2.11.2
+    - uses: actions/upload-artifact@v3
+      with:
+        path: ./wheelhouse/*.whl
     - name: Build a binary wheel and a source tarball
       run: |
         pip install build
@@ -39,3 +49,4 @@ jobs:
       uses: pypa/gh-action-pypi-publish@master
       with:
         password: ${{ secrets.PYPI_API_TOKEN }}
+        packages_dir: ./wheelhouse/
