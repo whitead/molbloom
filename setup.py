@@ -28,6 +28,7 @@ setup(
     license="MIT",
     package_data={"molbloom": ["data/*.bloom"]},
     install_requires=["importlib_resources"],
+    setup_requires=["cython"],
     packages=["molbloom"],
     long_description=long_description,
     long_description_content_type="text/markdown",
