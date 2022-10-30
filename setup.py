@@ -26,6 +26,7 @@ setup(
     author_email="andrew.white@rochester.edu",
     url="https://whitead.github.io/molbloom/",
     license="MIT",
+    include_package_data=True,
     package_data={"molbloom": ["data/*.bloom"]},
     install_requires=["importlib_resources"],
     packages=["molbloom"],
