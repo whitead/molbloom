@@ -131,14 +131,14 @@ bloom_t *bloom_read(char *filename)
   fread(magic, 1, 5, f);
   if (strcmp(magic, "BLOOM") != 0)
   {
-    fprintf(stderr, "bloom_read: invalid magic number\n");
+    fprintf(stderr, "bloom_read: invalid magic number in %s (should be BLOOM, but was %s)\n", filename, magic);
     fclose(f);
     return NULL;
   }
   char version = getc(f);
   if (version != FILE_VERSION)
   {
-    fprintf(stderr, "bloom_read: invalid version number\n");
+    fprintf(stderr, "bloom_read: this version of bloom filter is incompatible with this version of code\n");
     fclose(f);
     return NULL;
   }

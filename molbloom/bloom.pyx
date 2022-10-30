@@ -11,7 +11,7 @@ cdef class BloomFilter:
         cdef char * bfilename = tmp
         self._c_bloom = cbloom.bloom_read(bfilename)
         if self._c_bloom is NULL:
-            raise MemoryError()
+            raise MemoryError('Failed to read filter in ' + bfilename)
 
     def __dealloc__(self):
         if self._c_bloom is not NULL:
