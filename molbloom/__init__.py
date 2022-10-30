@@ -169,7 +169,10 @@ def buy_similar(
             http_status = response.status
             if http_status == 200:
                 lines = [line.decode('utf-8')[:-1].split('\t') for line in response.readlines()]
-                table = pandas.DataFrame(columns = lines[0], data = lines[1:])
+                # Split first column 'alignment' into [<smiles>,<compound_id>]
+                table = pandas.DataFrame(
+                    columns = ["smiles", "compound_id"] + lines[0][1:],
+                    data = [line[0].split(" ") + line[1:] for line in lines[1:]])
 
         if verbose:
             print(f"HTTP request attempt {attempt_i} failed with status: {http_status} ...")
