@@ -26,14 +26,17 @@ def _load_big_filter(name):
     filter_path = os.path.join(DEFAULT_PATH, f"{name}.bloom")
     if not os.path.exists(DEFAULT_PATH):
         os.makedirs(DEFAULT_PATH)
-        if not os.path.exists(filter_path):
-            print("Downloading filter...")
-            import urllib.request
+    if not os.path.exists(filter_path):
+        print(f"Starting filter download to cache directory {DEFAULT_PATH}")
+        import urllib.request
 
-            urllib.request.urlretrieve(
-                filter_urls[name], filter_path, reporthook=_download_progress
-            )
-
+        urllib.request.urlretrieve(
+            filter_urls[name], filter_path, reporthook=_download_progress
+        )
+    if not os.path.exists(filter_path):
+        raise ValueError(
+            f"Filter was not able to be downloaded. Try removing the cache in {DEFAULT_PATH}"
+        )
     filters[name] = BloomFilter(str(filter_path))
 
 
