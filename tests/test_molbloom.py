@@ -65,3 +65,16 @@ def test_fpr():
                     count += 1
     assert count > 1000
     print("False positive (instock) rate is {:f} (N={})".format(fp / count, count))
+
+
+def test_build_custom():
+    """Build a custom filter"""
+    bf = molbloom.CustomFilter(100, 1000, "test")
+    bf.add("CCCO")
+    assert "CCCO" in bf
+    assert "CCCOO" not in bf
+    bf.save("test.bloom")
+
+    bf = molbloom.BloomFilter("test.bloom")
+    assert "CCCO" in bf
+    assert "CCCOO" not in bf
