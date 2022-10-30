@@ -34,7 +34,7 @@ jobs:
     - name: Build a binary wheel and a source tarball
       run: |
         pip install build
-        python -m build --sdist --wheel --outdir dist/ .
+        python -m build --sdist --outdir dist/ .
     - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:
