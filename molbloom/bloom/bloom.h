@@ -146,6 +146,7 @@ bloom_t *bloom_read(char *filename)
   b->k = k;
   b->m = m;
   b->data = malloc(m / 8);
+  strcpy(b->name, "loaded bloom filter");
   fread(b->data, 1, m / 8, f);
   fclose(f);
 
