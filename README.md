@@ -22,3 +22,10 @@ If you want to look at the broader catalog of all molecules that are not in stoc
 buy('CCCO', instock=False)
 ```
 the reference for that is all ZINC20 from October 2021. *On first execution of `instock=False` it will download 2.0 GB of data to a cache directory.*
+
+To find similar purchasable molecules,
+```py
+buy_similar('CCCO')
+```
+this will query [ZINC Small World](https://sw.docking.org/) defaulting to the *Enamine REAL-22Q1-4.5B* database and return a `pandas.DataFrame`.
+
