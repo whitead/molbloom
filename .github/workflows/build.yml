@@ -9,7 +9,7 @@ on:
 
 
 jobs:
-  publish:
+  wheels:
 
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -27,15 +27,24 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         path: ./wheelhouse/*.whl
-    - name: Build a source tarball
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.8"
-      run: |
-        pip install build
-        python -m build --sdist --outdir dist/ .
-    - name: Publish distribution 📦 to PyPI
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
-        packages_dir: ./wheelhouse/
+  publish:
+    needs: [wheels]
+    name: Build & publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build sdist
+        run: pipx run build --sdist
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: dist/*.tar.gz
+      - name: Get files
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact
+          path: dist
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
