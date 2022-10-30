@@ -1,4 +1,4 @@
-# distutils: include_dirs =  fastz/bloom/
+# distutils: include_dirs =  molbloom/bloom/
 
 cimport cbloom
 

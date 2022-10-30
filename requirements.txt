@@ -1,0 +1,3 @@
+rdkit
+pytest
+pre-commit

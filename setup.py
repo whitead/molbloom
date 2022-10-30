@@ -1,29 +1,31 @@
 from setuptools import Extension, setup
 from Cython.Build import cythonize
 
-exec(open("fastz/version.py").read())
+exec(open("molbloom/version.py").read())
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 
 setup(
-    name="fastz",
+    name="molbloom",
     ext_modules=cythonize(
-        [Extension("fastz.bloom", ["fastz/bloom.pyx"],
-                   libraries=["m"],
-                   include_dirs=["fastz/bloom"])]),
+        [
+            Extension(
+                "molbloom.bloom",
+                ["molbloom/bloom.pyx"],
+                libraries=["m"],
+                include_dirs=["molbloom/bloom"],
+            )
+        ]
+    ),
     version=__version__,
     description="Purchaseable SMILES filter",
     author="Andrew White",
     author_email="andrew.white@rochester.edu",
-    url="https://whitead.github.io/fastz/",
+    url="https://whitead.github.io/molbloom/",
     license="MIT",
-    packages=["fastz"],
-    package_data={"fastz": ["filters/*.bloom"]},
-    install_requires=[
-        "importlib-resources",
-    ],
+    packages=["molbloom"],
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[

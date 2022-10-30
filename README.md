@@ -1,10 +1,10 @@
-# fastz
+# molbloom
 
 Can I buy this molecule? Returns results in about 500 ns and consumes about 2 GB of memory.
 
 ```py
 
-from fastz import buy
+from molbloom import buy
 buy('CCCO')
 # True
 but('ONN1CCCC1')

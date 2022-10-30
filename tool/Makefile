@@ -5,4 +5,3 @@ main: main.c
 
 clean:
 	rm -rvf *.o molbloom
-
