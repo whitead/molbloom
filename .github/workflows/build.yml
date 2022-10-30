@@ -28,6 +28,9 @@ jobs:
       with:
         path: ./wheelhouse/*.whl
     - name: Build a source tarball
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
       run: |
         pip install build
         python -m build --sdist --outdir dist/ .
