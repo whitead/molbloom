@@ -1,8 +1,6 @@
 from .version import __version__
 from molbloom.bloom import BloomFilter
 import os
-import molbloom.data
-from importlib_resources import files
 
 filters = {"zinc20": None, "instock": None}
 # just put in .cache
@@ -41,6 +39,9 @@ def _load_filter(name):
     global filters
     if filters[name] is None:
         if filter_urls[name] is None:
+            import molbloom.data
+            from importlib_resources import files
+
             # should be in package
             ap = files(molbloom.data).joinpath(f"{name}.bloom")
             filters[name] = BloomFilter(str(ap))
