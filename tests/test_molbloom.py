@@ -36,20 +36,20 @@ def test_alot():
 
 def test_fpr():
     """See how many molecules are false positives by isomerizing the SMILES"""
-    # count = 0
-    # fp = 0
-    # with open(os.path.join(os.path.dirname(__file__), "some_mols_zinc.txt")) as f:
-    #     for line in f:
-    #         s = line.split()[0]
-    #         assert molbloom.buy(s, instock=False, canonicalize=True)
-    #         for i in range(10):
-    #             rs = _randomize_smiles(s)
-    #             if rs is not None:
-    #                 if molbloom.buy(rs, instock=False):
-    #                     fp += 1
-    #                 count += 1
-    # assert count > 1000
-    # print("False positive rate is {:f} (N={})".format(fp / count, count))
+    count = 0
+    fp = 0
+    with open(os.path.join(os.path.dirname(__file__), "some_mols_zinc.txt")) as f:
+        for line in f:
+            s = line.split()[0]
+            assert molbloom.buy(s, instock=False)
+            for i in range(10):
+                rs = _randomize_smiles(s)
+                if rs is not None:
+                    if molbloom.buy(rs, instock=False):
+                        fp += 1
+                    count += 1
+    assert count > 1000
+    print("False positive rate is {:f} (N={})".format(fp / count, count))
 
     count = 0
     fp = 0
