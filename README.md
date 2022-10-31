@@ -17,11 +17,7 @@ but('ONN1CCCC1')
 If `buy` returns `True` - it may be purchasable with a measured error rate of 0.0003. If it returns `False` - it is not purchasable.
 The catalog information is from ZINC20. Add `canonicalize=True` if your SMILES are not canonicalized (requires installing rdkit).
 
-If you want to look at the broader catalog of all molecules that are not in stock:
-```py
-buy('CCCO', instock=False)
-```
-the reference for that is all ZINC20 from October 2021. *On first execution of `instock=False` it will download 2.0 GB of data to a cache directory.*
+There are other available catalogs - see options with `molbloom.catalogs()`. Most catalogs require an initial download. `buy('CCCO', catalog='zinc-instock-mini)` doesn't require a download and is included in the package. Useful for testing, but has a high false positive rate of 1%.
 
 # Querying Small World
 
@@ -68,10 +64,12 @@ where $M$ is the size in bits, $N$ is the number of compounds, and $\epsilon$ is
 ### Build with Python
 
 ```py
-from molbloom import CustomFilter
+from molbloom import CustomFilter, canon
 bf = CustomFilter(100, 1000, 'myfilter')
 bf.add('CCCO')
-
+# canonicalize one
+s = canon("CCCOC")
+bf.add(s)
 # save it
 bf.save('test.bloom')
 ```
