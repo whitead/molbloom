@@ -20,9 +20,11 @@ def test_version():
 
 
 def test_example():
-    assert molbloom.buy("c1ccc(c(c1)C(=O)OCC[C@@H]2CCCC[NH2+]2)N", instock=False)
-    assert not molbloom.buy("c1ccc(c(c1)C(=O)OCC[C@@H]2CCCC[NH2+]2)He", instock=False)
-    assert not molbloom.buy("ZZZ")
+    assert molbloom.buy("c1ccc(c(c1)C(=O)OCC[C@@H]2CCCC[NH2+]2)N", catalog="zinc20")
+    assert not molbloom.buy(
+        "c1ccc(c(c1)C(=O)OCC[C@@H]2CCCC[NH2+]2)He", catalog="zinc20"
+    )
+    assert not molbloom.buy("ZZZ", catalog="zinc-instock-mini")
 
 
 def test_alot():
@@ -38,33 +40,33 @@ def test_fpr():
     """See how many molecules are false positives by isomerizing the SMILES"""
     count = 0
     fp = 0
-    with open(os.path.join(os.path.dirname(__file__), "some_mols_zinc.txt")) as f:
-        for line in f:
-            s = line.split()[0]
-            assert molbloom.buy(s, instock=False)
-            for i in range(10):
-                rs = _randomize_smiles(s)
-                if rs is not None:
-                    if molbloom.buy(rs, instock=False):
-                        fp += 1
-                    count += 1
-    assert count > 1000
-    print("False positive rate is {:f} (N={})".format(fp / count, count))
-
-    count = 0
-    fp = 0
     with open(os.path.join(os.path.dirname(__file__), "some_mols_instock.txt")) as f:
         for line in f:
             s = line.split()[0]
-            assert molbloom.buy(s)
+            assert molbloom.buy(s, catalog="zinc-instock-mini")
             for i in range(10):
                 rs = _randomize_smiles(s)
                 if rs is not None:
-                    if molbloom.buy(rs):
+                    if molbloom.buy(rs, catalog="zinc-instock-mini"):
                         fp += 1
                     count += 1
     assert count > 1000
-    print("False positive (instock) rate is {:f} (N={})".format(fp / count, count))
+    print("False positive rate for instock mini {:f} (N={})".format(fp / count, count))
+
+    count = 0
+    fp = 0
+    with open(os.path.join(os.path.dirname(__file__), "some_mols_zinc.txt")) as f:
+        for line in f:
+            s = line.split()[0]
+            assert molbloom.buy(s, catalog="zinc20")
+            for i in range(10):
+                rs = _randomize_smiles(s)
+                if rs is not None:
+                    if molbloom.buy(rs, catalog="zinc20"):
+                        fp += 1
+                    count += 1
+    assert count > 1000
+    print("False positive rate for zinc all is {:f} (N={})".format(fp / count, count))
 
 
 def test_build_custom():
@@ -81,3 +83,8 @@ def test_build_custom():
     bf = molbloom.BloomFilter("test.bloom")
     assert "CCCO" in bf
     assert "CCCOO" not in bf
+
+
+def test_catalogs():
+    d = molbloom.catalogs()
+    assert "zinc20" in d

@@ -23,4 +23,4 @@ echo "Resetting Filter"
 rm -rf instock.bloom
 
 echo "Building Filter"
-./molbloom-bloom 100 instock 9227726 `ls ${ZINC_DIR}/*smi`
+./molbloom-bloom 10 instock 9227726 `ls ${ZINC_DIR}/*smi`
