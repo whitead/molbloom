@@ -186,7 +186,7 @@ def buy_similar(
     elif sw_status == "MISS":
         if verbose:
             print(f"No hits found for smiles {smiles}")
-        return pandas.DataFrame()
+        return []
     elif sw_status != "END":
         raise Exception(f"Unexpected status from SmallWorld '{sw_status}'")
 
