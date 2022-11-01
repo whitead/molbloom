@@ -25,7 +25,7 @@ To find similar purchasable molecules,
 ```py
 buy_similar('CCCO')
 ```
-this will query [ZINC Small World](https://sw.docking.org/) defaulting to the *Enamine REAL-22Q1-4.5B* database and return a `pandas.DataFrame`.
+this will query [ZINC Small World](https://sw.docking.org/) defaulting to the *Enamine REAL-22Q1-4.5B* database and return a list of hits and their similarities to the query via few different measures.
 
 =======
 
