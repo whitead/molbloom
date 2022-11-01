@@ -3,6 +3,7 @@ from molbloom.bloom import BloomFilter, CustomFilter
 import os
 import molbloom.data
 from importlib_resources import files
+from dataclasses import dataclass
 
 _filters = {"zinc20": None, "zinc-instock": None, "zinc-instock-mini": None}
 _descriptions = {
@@ -80,6 +81,24 @@ def buy(smiles, catalog="zinc-instock", canonicalize=False):
     if canonicalize:
         smiles = canon(smiles)
     return smiles in _filters[catalog]
+
+
+@dataclass
+class SmallWorldHit:
+    """Small World Similarity Search Hit Data"""
+
+    #: Hit smiles
+    smiles: str
+    #: Hit compound id
+    compound_id: str
+    #: Hit graph edit distance to query
+    dist: int
+    #: Hit extended connectivity fingerprint (radius = 2) to query
+    ecfp4: float
+    #: Hit daylight fingerprint distance
+    daylight: float
+    #: Hit Maximum Common Edge Subgraph
+    mces: int
 
 
 def buy_similar(
@@ -202,7 +221,7 @@ def buy_similar(
         print(f"Getting results from ZINC Small World with url: {results_url}")
 
     http_status = None
-    table = None
+    hits = []
     for attempt_i in range(n_retries):
         try:
             with urllib.request.urlopen(results_url) as response:
@@ -211,15 +230,21 @@ def buy_similar(
                     continue
                 http_status = response.status
                 if http_status == 200:
-                    lines = [
-                        line.decode("utf-8")[:-1].split("\t")
-                        for line in response.readlines()
-                    ]
-                    # Split first column 'alignment' into [<smiles>,<compound_id>]
-                    table = pandas.DataFrame(
-                        columns=["smiles", "compound_id"] + lines[0][1:],
-                        data=[line[0].split(" ") + line[1:] for line in lines[1:]],
-                    )
+                    next(response)
+                    for line in response.readlines():
+                        line = line.decode("utf-8")[:-1].split("\t")
+                        smiles, compound_id = line[0].split(" ")
+                        hits.append(
+                            SmallWorldHit(
+                                smiles=smiles,
+                                compound_id=compound_id,
+                                dist=int(line[1]),
+                                ecfp4=float(line[2]),
+                                daylight=float(line[3]),
+                                #
+                                mces=int(line[5]),
+                            )
+                        )
                     break
         except urllib.error.HTTPError as e:
             print(
@@ -238,4 +263,4 @@ def buy_similar(
     if http_status != 200:
         raise Exception(f"Failed to get results with HTTP status: {http_status}")
 
-    return table
+    return hits

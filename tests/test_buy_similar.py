@@ -1,11 +1,12 @@
 import molbloom
+from dataclasses import asdict
 
 
 def test_buy_similar():
     """Test basic build_similar interface"""
     similar_substances = molbloom.buy_similar("COC[C@H](N)[C@]1(O)CCS[C@H]1C")
-    assert similar_substances.shape[0] > 1000  # last checked (11/1/2022 it is 13318)
-    assert similar_substances.shape[1] == 7
+    assert len(similar_substances) > 1000  # last checked (11/1/2022 it is 13318)
+    assert len(asdict(similar_substances[0])) == 6
 
 
 def test_buy_similar_alt_databases():
@@ -13,8 +14,8 @@ def test_buy_similar_alt_databases():
     similar_substances = molbloom.buy_similar(
         smiles="COC[C@H](N)[C@]1(O)CCS[C@H]1C", db="WuXi-20Q4.smi.anon"
     )
-    assert similar_substances.shape[0] > 1000  # last checked (11/1/2022 it is 3172)
-    assert similar_substances.shape[1] == 7
+    assert len(similar_substances) > 1000  # last checked (11/1/2022 it is 3172)
+    assert len(asdict(similar_substances[0])) == 6
 
 
 def test_buy_similar_bad_db():
