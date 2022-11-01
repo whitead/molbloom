@@ -126,7 +126,6 @@ def buy_similar(
     import urllib.parse
     import urllib.request
     import time
-    import pandas
 
     try:
         sw_server_path = "https://sw.docking.org/search/"
