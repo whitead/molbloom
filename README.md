@@ -10,7 +10,7 @@ pip install molbloom
 from molbloom import buy
 buy('CCCO')
 # True
-but('ONN1CCCC1')
+buy('ONN1CCCC1')
 # False
 ```
 
