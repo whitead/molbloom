@@ -118,7 +118,7 @@ def buy_similar(
         "sub": 6,
         "scores": "Atom%20Alignment,ECFP4,Daylight",
     },
-    n_retries=5,
+    n_retries=8,
     verbose=False,
 ):
 
@@ -139,63 +139,109 @@ def buy_similar(
     if verbose:
         print(f"Querying ZINC Small World with url: {query_url}")
 
-    lines = None
-    http_status = None
+    hlid = None
     for attempt_i in range(n_retries):
+        if verbose:
+            print(f"Query attempt {attempt_i + 1} / {n_retries}")
+        lines = None
+        http_status = None
         try:
             with urllib.request.urlopen(query_url) as response:
                 http_status = response.status
                 if http_status == 200:
                     lines = [line.decode("utf-8")[:-1] for line in response.readlines()]
-                    break
         except urllib.error.HTTPError as e:
-            print(
-                f"ERROR: Failed to query https://sw.docking.org with smiles '{smiles}'"
-            )
-            print(f"ERROR: Query URL: {query_url}")
-            print(f"ERROR: {e}")
-            raise e
+            if e.getcode() == 400:
+                print(
+                    f"ERROR: Failed to query https://sw.docking.org with smiles '{smiles}'"
+                )
+                print(f"ERROR: Query URL: {query_url}")
+                print(f"ERROR: {e}")
+                raise e
 
-        if verbose:
-            print(
-                f"HTTP request attempt {attempt_i} failed with status: {http_status} ..."
-            )
-        time.sleep(1)
+            if verbose:
+                print(
+                    f"ERROR: Failed to query https://sw.docking.org with smiles '{smiles}'"
+                )
+                print(f"ERROR: Query URL: {query_url}")
+                print(f"ERROR: {e}")
 
-    if lines is None:
-        raise Exception(f"Failed to query sw.docking.org, HTTPS status: {http_status}")
-
-    sw_status = None
-    hlid = None
-    for line in lines:
-        if line == "":
+            time.sleep(2)
             continue
-        line = line.replace("data:{", "").replace("}\n", "")
-        line = line.split(",")
 
-        for key_value in line:
-            if '"status":' in key_value:
-                sw_status = key_value.replace('"status":', "").replace('"', "")
+        if lines is None:
+            if verbose:
+                print(
+                    f"ERROR: Failed to query sw.docking.org, HTTPS status: {http_status}"
+                )
+            time.sleep(2)
+            continue
 
-            if "hlid" in key_value:
-                hlid = key_value.replace('"hlid":', "")
+        sw_status = None
+        try:
+            for line in lines:
+                if line == "":
+                    continue
+                line = line.replace("data:{", "").replace("}\n", "")
+                line = line.split(",")
 
-    if sw_status is None:
-        response_str = "\n".join(lines)
-        raise Exception(f"Unexpected result from SmallWorld:\n{response_str}")
-    elif sw_status == "MISS":
+                for key_value in line:
+                    if '"status":' in key_value:
+                        sw_status = key_value.replace('"status":', "").replace('"', "")
+
+                    if "hlid" in key_value:
+                        hlid = key_value.replace('"hlid":', "")
+        except Exception as e:
+            if verbose:
+                print(f"ERROR: Failed to parse query response with error\n{e}")
+            time.sleep(2)
+            continue
+
+        if sw_status is None:
+            response_str = "\n".join(lines)
+            if verbose:
+                print(f"ERROR: Unexpected result from SmallWorld:\n{response_str}")
+            time.sleep(2)
+            continue
+        elif sw_status == "FIRST":
+            if verbose:
+                print(f"Got first hit, but didn't finish... retrying")
+            time.sleep(2)
+            continue
+        elif sw_status == "Ground Control to Major Tom" or sw_status == "MORE":
+            if verbose:
+                print("Still proccessing results... retrying")
+        elif sw_status == "MISS":
+            if verbose:
+                print(f"ERROR: No hits found for smiles {smiles}")
+            time.sleep(2)
+            continue
+        elif sw_status != "END":
+            if verbose:
+                print(f"ERROR Unexpected status from SmallWorld '{sw_status}'")
+            time.sleep(2)
+            continue
+
+        try:
+            hlid = int(hlid)
+        except:
+            if verboes:
+                print(
+                    f"ERROR: Expected small world query id to be an integer, instead it was {hlid}"
+                )
+            time.sleep(2)
+            continue
+
+        # stop got the hlid stop retrying
+        break
+
+    # the query should give back an hlid which we can use to get the results below
+    if not isinstance(hlid, int):
         if verbose:
-            print(f"No hits found for smiles {smiles}")
+            print(
+                f"Failed to get the result with {n_retries}. Consider trying with more retries or checking the query smiles '{smiles}' on https://sw.docking.org/search"
+            )
         return []
-    elif sw_status != "END":
-        raise Exception(f"Unexpected status from SmallWorld '{sw_status}'")
-
-    try:
-        hlid = int(hlid)
-    except:
-        raise Exception(
-            f"Expected small world query id to be an integer, instead it was {hlid}"
-        )
 
     results_args = (
         "&".join(
@@ -222,10 +268,12 @@ def buy_similar(
     http_status = None
     hits = []
     for attempt_i in range(n_retries):
+        if verbose:
+            print(f"Retrieve results attempt {attempt_i + 1} / {n_retries}")
         try:
             with urllib.request.urlopen(results_url) as response:
                 if response is None:
-                    time.sleep(1)
+                    time.sleep(2)
                     continue
                 http_status = response.status
                 if http_status == 200:
@@ -244,22 +292,35 @@ def buy_similar(
                                 mces=int(line[5]),
                             )
                         )
-                    break
         except urllib.error.HTTPError as e:
-            print(
-                f"ERROR: Failed to retrieve results from https://sw.docking.org with smiles '{smiles}'"
-            )
-            print(f"ERROR: Results url {results_url}")
-            print(f"ERROR: {e}")
-            raise e
+            if e.getcode() == 400:
+                print(
+                    f"ERROR: Failed to retrieve results from https://sw.docking.org with smiles '{smiles}'"
+                )
+                print(f"ERROR: Results url {results_url}")
+                print(f"ERROR: {e}")
+                raise e
 
-        if verbose:
-            print(
-                f"HTTP request attempt {attempt_i} failed with status: {http_status} ..."
-            )
-        time.sleep(1)
+            if verbose:
+                print(
+                    f"ERROR: Failed to retrieve results from https://sw.docking.org with smiles '{smiles}'"
+                )
+                print(f"ERROR: Results url {results_url}")
+                print(f"ERROR: {e}")
 
-    if http_status != 200:
-        raise Exception(f"Failed to get results with HTTP status: {http_status}")
+            time.sleep(2)
+            continue
+
+        except Exception as e:
+            if verbose:
+                print(f"ERROR: Unable to parse results with error\n{e}")
+            time.sleep(2)
+            continue
+
+        # read the hits without error
+        break
+
+    if verbose:
+        print(f"retrieved {len(hits)} hits.")
 
     return hits
