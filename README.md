@@ -19,6 +19,17 @@ The catalog information is from ZINC20. Add `canonicalize=True` if your SMILES a
 
 There are other available catalogs - see options with `molbloom.catalogs()`. Most catalogs require an initial download. `buy('CCCO', catalog='zinc-instock-mini)` doesn't require a download and is included in the package. Useful for testing, but has a high false positive rate of 1%.
 
+# Querying Small World
+
+To find similar purchasable molecules,
+```py
+buy_similar('CCCO')
+```
+this will query [ZINC Small World](https://sw.docking.org/) defaulting to the *Enamine REAL-22Q1-4.5B* database and return a list of hits and their similarities to the query via few different measures.
+
+=======
+
+
 ## Custom Filter
 
 Do you have your own list of SMILES? There are two ways to build a filter -- you can use a C tool that is very fast (1M / s) if your SMILES are in a file and already canonical. Or you can use the Python API to programmaticaly build a filter and canonicalize as you go. See below
@@ -62,3 +73,4 @@ bf.add(s)
 # save it
 bf.save('test.bloom')
 ```
+>>>>>>> 39fb1ee7275f719b67edfc7d1c015eadcd271263
