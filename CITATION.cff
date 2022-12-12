@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "White"
+  given-names: "Andrew D"
+  orcid: "https://orcid.org/0000-0002-6647-3965"
+title: "molbloom: quick assessment of compound purchasability with bloom filters"
+version: 2.0.0
+doi: 10.5281/zenodo.7426402
+date-released: 2022-12-01
+url: "https://github.com/whitead/molbloom"

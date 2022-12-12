@@ -88,3 +88,8 @@ def test_build_custom():
 def test_catalogs():
     d = molbloom.catalogs()
     assert "zinc20" in d
+
+
+def test_all_catalogs():
+    for catalog in molbloom.catalogs():
+        molbloom.buy("CCCOC", catalog=catalog)

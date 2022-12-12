@@ -4,6 +4,8 @@ cimport cbloom
 
 
 cdef class BloomFilter:
+    '''A read-only bloom filter -- use this if you want to load a filter from disk
+    '''
     cdef cbloom.bloom_t * _c_bloom
 
     def __cinit__(self, str filename):
@@ -23,6 +25,17 @@ cdef class BloomFilter:
         return cbloom.bloom_check(self._c_bloom, bsmiles) == 1
 
 cdef class CustomFilter:
+    '''An editable bloom filter -- use this if you want to modify and save
+
+    Parameters
+    ----------
+    size : int
+        The size of the filter in bits.
+    n : int
+        The total number elements that will be in the filter (estimated).
+    name : str
+        The name of the filter.
+    '''
     cdef cbloom.bloom_t * _c_bloom
 
     def __cinit__(self, int size, int n, str name):
