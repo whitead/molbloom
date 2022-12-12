@@ -21,17 +21,22 @@ There are other available catalogs - see options with `molbloom.catalogs()`. Mos
 
 ## Querying Small World
 
-To find similar purchasable molecules,
+Just because `buy` returns `True` doesn't mean you can buy it -- you should follow-up with a real query at [ZINC](https://zinc.docking.org/) or you can use the search feature in `SmallWorld` to find similar purchasable molecules.
+
 ```py
-buy_similar('CCCO')
+from smallworld_api import SmallWorld
+sw = SmallWorld()
+
+aspirin = 'O=C(C)Oc1ccccc1C(=O)O'
+results = sw.search(aspirin, dist=5, db=sw.REAL_dataset)
 ```
-this will query [ZINC Small World](https://sw.docking.org/) defaulting to the *Enamine REAL-22Q1-4.5B* database and return a list of hits and their similarities to the query via few different measures.
+this will query [ZINC Small World](https://sw.docking.org/).
 
 ## Custom Filter
 
 Do you have your own list of SMILES? There are two ways to build a filter -- you can use a C tool that is very fast (1M / s) if your SMILES are in a file and already canonical. Or you can use the Python API to programmaticaly build a filter and canonicalize as you go. See below
 
-Once built:
+Once your custom filter is built:
 
 ```py
 from molbloom import BloomFilter
@@ -47,7 +52,7 @@ You can build your own filter using the code in the `tool/` directory.
 ```sh
 cd tool
 make
-./molbloom-bloom <MB of filter> <filter name> <approx number of compounds> <input file 1> <input file 2> ...
+./molbloom-bloom <MB of final filter> <filter name> <approx number of compounds> <input file 1> <input file 2> ...
 ```
 
 where each input file has SMILES on each line in the first column and is already canonicalized. The higher the MB, the lower the rate of false positives. If you want to choose the false positive rate rather than the size, you can use the equation:
@@ -60,13 +65,15 @@ where $M$ is the size in bits, $N$ is the number of compounds, and $\epsilon$ is
 
 ### Build with Python
 
+You can also build a filter using python as follows:
+
 ```py
 from molbloom import CustomFilter, canon
 bf = CustomFilter(100, 1000, 'myfilter')
 bf.add('CCCO')
-# canonicalize one
+# canonicalize one record
 s = canon("CCCOC")
 bf.add(s)
-# save it
+# finalize filter into a file
 bf.save('test.bloom')
 ```
