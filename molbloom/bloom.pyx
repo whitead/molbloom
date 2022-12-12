@@ -24,7 +24,7 @@ cdef class BloomFilter:
         cdef char * bsmiles = tmp
         return cbloom.bloom_check(self._c_bloom, bsmiles) == 1
 
-cdef class CustomBloomFilter:
+cdef class CustomFilter:
     '''An editable bloom filter -- use this if you want to modify and save
 
     Parameters
