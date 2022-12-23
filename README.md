@@ -21,7 +21,7 @@ There are other available catalogs - see options with `molbloom.catalogs()`. Mos
 
 ## Querying Small World
 
-Just because `buy` returns `True` doesn't mean you can buy it -- you should follow-up with a real query at [ZINC](https://zinc.docking.org/) or you can use the search feature in `SmallWorld` to find similar purchasable molecules.
+Just because `buy` returns `True` doesn't mean you can buy it -- you should follow-up with a real query at [ZINC](https://zinc.docking.org/) or you can use the search feature in [`SmallWorld`](https://github.com/matteoferla/Python_SmallWorld_API) to find similar purchasable molecules.
 
 ```py
 from smallworld_api import SmallWorld
@@ -76,4 +76,18 @@ s = canon("CCCOC")
 bf.add(s)
 # finalize filter into a file
 bf.save('test.bloom')
+```
+
+## Citation
+
+```bibtex
+@software{White_molbloom_quick_assessment_2022,
+author = {White, Andrew D},
+doi = {10.5281/zenodo.7426402},
+month = {12},
+title = {{molbloom: quick assessment of compound purchasability with bloom filters}},
+url = {https://github.com/whitead/molbloom},
+version = {2.0.0},
+year = {2022}
+}
 ```
