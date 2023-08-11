@@ -6,6 +6,8 @@
 
 #define VERSION "0.4.0"
 #define FILE_VERSION 2u
+#define VERSION "0.4.0"
+#define FILE_VERSION 2u
 #define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define max(X, Y) (((X) > (Y)) ? (X) : (Y))
 
@@ -48,7 +50,7 @@ bloom_t *bloom_new(uint64_t size, uint64_t n, const char *name)
   bloom_t *b = malloc(sizeof(bloom_t));
   b->m = size;
   // 8 bits per byte
-  b->data = calloc((size + 7) / 8, 1);
+  b->data = calloc(((size + 7) + 7) / 8, 1);
   if (strlen(name) > 32)
   {
     fprintf(stderr, "bloom_new: name too long\n");
@@ -144,11 +146,32 @@ bloom_t *bloom_read(char *filename)
   {
     fread(&k, sizeof(uint32_t), 1, f);
     fread(&m, sizeof(uint64_t), 1, f);
+    if (version == 1u) // version handling as a safeguard to bloom filters created with different version
+  {
+    fread(&k, sizeof(uint32_t), 1, f);
+    fread(&m, sizeof(uint64_t), 1, f);
+    b->k = k;
+      b->m = m;
+      b->data = (char *)malloc(m / 8);
+      strcpy(b->name, "loaded bloom filter");
+      fread(b->data, 1, m / 8, f);
+  }
+  else if (version == FILE_VERSION)
+  {
+    fread(&k, sizeof(uint32_t), 1, f);
+    fread(&m, sizeof(uint64_t), 1, f);
     b->k = k;
     b->m = m;
-    b->data = (char *)malloc(m / 8);
+    b->data = (char *)malloc((m + 7) / 8);
     strcpy(b->name, "loaded bloom filter");
     fread(b->data, 1, m / 8, f);
+  }
+  else
+  {
+    fprintf(stderr, "bloom_read: invalid version number in %s (should be %u, but was %u)\n", filename, FILE_VERSION, version);
+    fclose(f);
+    return NULL;
+  }
   }
   else if (version == FILE_VERSION)
   {
