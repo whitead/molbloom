@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define VERSION "0.3.0"
-#define FILE_VERSION 1u
+#define VERSION "0.4.0"
+#define FILE_VERSION 2u
 #define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define max(X, Y) (((X) > (Y)) ? (X) : (Y))
 
@@ -48,7 +48,7 @@ bloom_t *bloom_new(uint64_t size, uint64_t n, const char *name)
   bloom_t *b = malloc(sizeof(bloom_t));
   b->m = size;
   // 8 bits per byte
-  b->data = calloc(size / 8, 1);
+  b->data = calloc((size + 7) / 8, 1);
   if (strlen(name) > 32)
   {
     fprintf(stderr, "bloom_new: name too long\n");
@@ -137,24 +137,36 @@ bloom_t *bloom_read(char *filename)
     return NULL;
   }
   char version = getc(f);
-  if (version != FILE_VERSION)
+  uint32_t k;
+  uint64_t m;
+  bloom_t *b = (bloom_t *)malloc(sizeof(bloom_t));
+  if (version == 1u) // version handling as a safeguard to bloom filters created with different version
   {
-    fprintf(stderr, "bloom_read: this version of bloom filter is incompatible with this version of code\n");
+    fread(&k, sizeof(uint32_t), 1, f);
+    fread(&m, sizeof(uint64_t), 1, f);
+    b->k = k;
+    b->m = m;
+    b->data = (char *)malloc(m / 8);
+    strcpy(b->name, "loaded bloom filter");
+    fread(b->data, 1, m / 8, f);
+  }
+  else if (version == FILE_VERSION)
+  {
+    fread(&k, sizeof(uint32_t), 1, f);
+    fread(&m, sizeof(uint64_t), 1, f);
+    b->k = k;
+    b->m = m;
+    b->data = (char *)malloc((m + 7) / 8);
+    strcpy(b->name, "loaded bloom filter");
+    fread(b->data, 1, m / 8, f);
+  }
+  else
+  {
+    fprintf(stderr, "bloom_read: invalid version number in %s (should be %u, but was %u)\n", filename, FILE_VERSION, version);
     fclose(f);
     return NULL;
   }
-  uint32_t k;
-  uint64_t m;
-  fread(&k, sizeof(uint32_t), 1, f);
-  fread(&m, sizeof(uint64_t), 1, f);
-  bloom_t *b = (bloom_t *)malloc(sizeof(bloom_t));
-  b->k = k;
-  b->m = m;
-  b->data = (char *)malloc(m / 8);
-  strcpy(b->name, "loaded bloom filter");
-  fread(b->data, 1, m / 8, f);
   fclose(f);
-
   printf("bloom_read: %s size=%lu bits, MB=%2f, k=%u\n", b->name, b->m,
          ((float)b->m) / 1024 / 1024 / 8, b->k);
   return b;
