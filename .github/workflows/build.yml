@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         #os: [ubuntu-20.04, windows-2019, macos-11] - cannot figure out how to get libm to work on windows
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-2019]
 
     steps:
     - uses: actions/checkout@v2
