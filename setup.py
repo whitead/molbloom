@@ -17,7 +17,7 @@ setup(
             Extension(
                 "molbloom.bloom",
                 ["molbloom/bloom.pyx"],
-                libraries=[find_library("m") if os.name == "nt" else "m"],
+                libraries=[] if os.name == "nt" else ["m"],
                 include_dirs=["molbloom/bloom"],
             )
         ]
