@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>  // Add this include at the top of the file
+
 
 #define VERSION "0.4.0"
 #define FILE_VERSION 2u
@@ -45,10 +47,10 @@ typedef struct
 bloom_t *bloom_new(uint64_t size, uint64_t n, const char *name)
 {
 
-  bloom_t *b = malloc(sizeof(bloom_t));
+  bloom_t *b = (bloom_t *) malloc(sizeof(bloom_t));
   b->m = size;
   // 8 bits per byte
-  b->data = calloc((size + 7) / 8, 1);
+  b->data = (char *) calloc(((size + 7) + 7) / 8, 1);
   if (strlen(name) > 32)
   {
     fprintf(stderr, "bloom_new: name too long\n");
@@ -65,7 +67,7 @@ bloom_t *bloom_new(uint64_t size, uint64_t n, const char *name)
   b->k = max(8, min(64, (char)(b->m / n * log(2))));
 
   // print info and false positive rate
-  printf("bloom_new: %s size=%lu bits, MB=%2f, n=%lu k=%u fp=%f\n", b->name, b->m,
+  printf("bloom_new: %s size=%" PRIu64 " bits, MB=%2f, n=%" PRIu64 " k=%u fp=%f\n", b->name, b->m,
          ((float)b->m) / 1024 / 1024 / 8, n, b->k,
          pow(1 - exp(-(float)(b->k * n) / (b->m)), b->k));
 
@@ -167,7 +169,7 @@ bloom_t *bloom_read(char *filename)
     return NULL;
   }
   fclose(f);
-  printf("bloom_read: %s size=%lu bits, MB=%2f, k=%u\n", b->name, b->m,
+  printf("bloom_read: %s size=%" PRIu64 " bits, MB=%2f, k=%u\n", b->name, b->m,
          ((float)b->m) / 1024 / 1024 / 8, b->k);
   return b;
 }

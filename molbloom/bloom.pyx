@@ -1,6 +1,6 @@
-# distutils: include_dirs =  molbloom/bloom/
+# distutils: include_dirs =  molbloom
 
-cimport cbloom
+from . cimport cbloom
 
 
 cdef class BloomFilter:
