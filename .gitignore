@@ -194,3 +194,6 @@ sphinx-docs/docs_out/**
 tool/molbloom-bloom
 molbloom/bloom.c
 *.bloom
+
+# mac files
+.DS_Store
