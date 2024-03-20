@@ -1,5 +1,6 @@
 # distutils: include_dirs =  molbloom
 
+from libc cimport stdint
 from . cimport cbloom
 
 
@@ -29,16 +30,16 @@ cdef class CustomFilter:
 
     Parameters
     ----------
-    size : int
+    size : uint64_t
         The size of the filter in bits.
-    n : int
+    n : uint64_t
         The total number elements that will be in the filter (estimated).
     name : str
         The name of the filter.
     '''
     cdef cbloom.bloom_t * _c_bloom
 
-    def __cinit__(self, int size, int n, str name):
+    def __cinit__(self, stdint.uint64_t size, stdint.uint64_t n, str name):
         tmp = name.encode('UTF-8')
         cdef char * bname = tmp
         self._c_bloom = cbloom.bloom_new(size, n, bname)
