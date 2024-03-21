@@ -93,4 +93,3 @@ def test_catalogs():
 def test_all_catalogs():
     for catalog in molbloom.catalogs():
         molbloom.buy("CCCOC", catalog=catalog)
-
