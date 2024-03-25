@@ -1,3 +1,4 @@
 include molbloom/bloom.pyx
-include molbloom/cbloomd.pxd
+include molbloom/cbloom.pxd
 include molbloom/bloom/bloom.h
+recursive-include tests *
