@@ -81,13 +81,18 @@ bf.save('test.bloom')
 ## Citation
 
 ```bibtex
-@software{White_molbloom_quick_assessment_2022,
-author = {White, Andrew D},
-doi = {10.5281/zenodo.7426402},
-month = {12},
-title = {{molbloom: quick assessment of compound purchasability with bloom filters}},
-url = {https://github.com/whitead/molbloom},
-version = {2.0.0},
-year = {2022}
+ @article{Medina_White_2023,
+  title={Bloom filters for molecules},
+  volume={15},
+  ISSN={1758-2946},
+  url={https://jcheminf.biomedcentral.com/articles/10.1186/s13321-023-00765-1},
+  DOI={10.1186/s13321-023-00765-1},
+  number={1},
+  journal={Journal of Cheminformatics},
+  author={Medina, Jorge and White, Andrew D.},
+  year={2023},
+  month=oct,
+  pages={95},
+  language={en}
 }
 ```
