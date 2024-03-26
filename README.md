@@ -81,18 +81,14 @@ bf.save('test.bloom')
 ## Citation
 
 ```bibtex
- @article{Medina_White_2023,
+@article{medina2023bloom,
   title={Bloom filters for molecules},
-  volume={15},
-  ISSN={1758-2946},
-  url={https://jcheminf.biomedcentral.com/articles/10.1186/s13321-023-00765-1},
-  DOI={10.1186/s13321-023-00765-1},
-  number={1},
+  author={Medina, Jorge and White, Andrew D},
   journal={Journal of Cheminformatics},
-  author={Medina, Jorge and White, Andrew D.},
-  year={2023},
-  month=oct,
+  volume={15},
+  number={1},
   pages={95},
-  language={en}
+  year={2023},
+  publisher={Springer}
 }
 ```
