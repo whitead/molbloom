@@ -70,7 +70,9 @@ def canon(smiles):
         from rdkit import Chem
     except ImportError:
         raise ImportError("To canonicalize SMILES, rdkit is required.")
-    return Chem.MolToSmiles(Chem.MolFromSmiles(smiles), canonical=True)
+    return Chem.MolToSmiles(
+        Chem.MolFromSmiles(smiles), canonical=True, isomerSmiles=False
+    )
 
 
 def catalogs():
