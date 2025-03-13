@@ -1,4 +1,4 @@
 rdkit
 pytest
 pre-commit
-cython
+cython>=3.0.10

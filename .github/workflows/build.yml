@@ -20,8 +20,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build wheels
-      uses: pypa/cibuildwheel@v2.17.0
-    - uses: actions/upload-artifact@v3
+      uses: pypa/cibuildwheel@v2.23.0
+    - uses: actions/upload-artifact@v4
       with:
         path: ./wheelhouse/*.whl
   publish:
@@ -33,15 +33,15 @@ jobs:
       - name: Build sdist
         run: pipx run build --sdist
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           path: dist/*.tar.gz
       - name: Get files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifact
           path: dist
       - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
