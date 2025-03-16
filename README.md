@@ -19,6 +19,10 @@ The catalog information is from ZINC20. Add `canonicalize=True` if your SMILES a
 
 There are other available catalogs - see options with `molbloom.catalogs()`. Most catalogs require an initial download. `buy('CCCO', catalog='zinc-instock-mini)` doesn't require a download and is included in the package. Useful for testing, but has a high false positive rate of 1%.
 
+## Simple Reagents
+
+By default, it will first check against common organic reagents like water, ether, etc. You can disable this check by adding `check_common=False`
+
 ## Querying Small World
 
 Just because `buy` returns `True` doesn't mean you can buy it -- you should follow-up with a real query at [ZINC](https://zinc.docking.org/) or you can use the search feature in [`SmallWorld`](https://github.com/matteoferla/Python_SmallWorld_API) to find similar purchasable molecules.
