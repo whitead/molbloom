@@ -218,6 +218,7 @@ _common = {
     "O=C1CCC1Cl",
     "O=C1OI(=O)(O)c2ccccc21",
     "O=C=O",
+    "C1=CC=C(C(=C1)C(=O)O)N",
     "O=CO",
     "O=C[O-]",
     "O=N[O-]",
