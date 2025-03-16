@@ -20,6 +20,7 @@ _common = {
     "C1CCC2=NCCCN2CC1",
     "C1CCCCC1",
     "C1CCNC1",
+    "OCC(O)CO",
     "C1CCNCC1",
     "C1CCOC1",
     "C1CN2CCN1CC2",
