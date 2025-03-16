@@ -27,6 +27,11 @@ def test_example():
     assert not molbloom.buy("ZZZ", catalog="zinc-instock-mini")
 
 
+def test_common():
+    assert molbloom.buy("Br")
+    assert not molbloom.buy("Br", catalog="zinc20", check_common=False)
+
+
 def test_alot():
     import timeit
 

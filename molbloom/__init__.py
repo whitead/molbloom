@@ -4,6 +4,7 @@ import os
 import molbloom.data
 from importlib_resources import files
 from dataclasses import dataclass
+from .common import _common
 
 _filters = {
     "zinc20": None,
@@ -71,7 +72,7 @@ def canon(smiles):
     except ImportError:
         raise ImportError("To canonicalize SMILES, rdkit is required.")
     return Chem.MolToSmiles(
-        Chem.MolFromSmiles(smiles), canonical=True, isomerSmiles=False
+        Chem.MolFromSmiles(smiles), canonical=True, isomericSmiles=True
     )
 
 
@@ -80,8 +81,20 @@ def catalogs():
     return _descriptions
 
 
-def buy(smiles, catalog="zinc-instock", canonicalize=False):
-    """Returns True if the SMILES is probably in the catalog, False if it is definitely not"""
+def buy(smiles, catalog="zinc-instock", canonicalize=False, check_common=True):
+    """Returns True if the SMILES is probably in the catalog, False if it is definitely not
+
+    Parameters
+    ----------
+    smiles : str
+        The SMILES to check
+    catalog : str
+        The catalog to check against. Options are 'zinc20', 'zinc-instock', 'zinc-instock-mini', 'surechembl'
+    canonicalize : bool
+        Whether to canonicalize the SMILES before checking
+    check_common : bool
+        Whether to check against a list of common reagents before checking the filter
+    """
     if catalog not in _filters:
         raise ValueError(
             f"Catalog {catalog} is not available. Try one of {list(_filters.keys())}"
@@ -89,4 +102,6 @@ def buy(smiles, catalog="zinc-instock", canonicalize=False):
     _load_filter(catalog)
     if canonicalize:
         smiles = canon(smiles)
+    if check_common and smiles in _common:
+        return True
     return smiles in _filters[catalog]
