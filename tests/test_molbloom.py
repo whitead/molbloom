@@ -20,9 +20,13 @@ def test_version():
 
 
 def test_example():
-    assert molbloom.buy("c1ccc(c(c1)C(=O)OCC[C@@H]2CCCC[NH2+]2)N", catalog="zinc20")
+    assert molbloom.buy(
+        "Nc1ccn([C@H]2OC(CO)=C[C@@H]2O)c(=O)n1",
+        catalog="zinc-instock-mini",
+        canonicalize=True,
+    )
     assert not molbloom.buy(
-        "c1ccc(c(c1)C(=O)OCC[C@@H]2CCCC[NH2+]2)He", catalog="zinc20"
+        "c1c(c(c1)C(=O)OCC[C@@H]2CCCC[NH2+]2)", catalog="zinc20", canonicalize=True
     )
     assert not molbloom.buy("ZZZ", catalog="zinc-instock-mini")
 
@@ -36,7 +40,7 @@ def test_alot():
     import timeit
 
     r = timeit.timeit(
-        lambda: molbloom.buy("c1ccc(c(c1)C(=O)OCC[C@@H]2CCCC[NH2+]2)N"), number=100000
+        lambda: molbloom.buy("Nc1ccn([C@H]2OC(CO)=C[C@@H]2O)c(=O)n1"), number=100000
     )
     print("Timing per call: {:.0f}ns".format(r / 100000 * 1e9))
 
@@ -48,11 +52,11 @@ def test_fpr():
     with open(os.path.join(os.path.dirname(__file__), "some_mols_instock.txt")) as f:
         for line in f:
             s = line.split()[0]
-            assert molbloom.buy(s, catalog="zinc-instock-mini")
+            assert molbloom.buy(s, catalog="zinc-instock-mini", canonicalize=True)
             for i in range(10):
                 rs = _randomize_smiles(s)
                 if rs is not None:
-                    if molbloom.buy(rs, catalog="zinc-instock-mini"):
+                    if molbloom.buy(rs, catalog="zinc-instock-mini", canonicalize=True):
                         fp += 1
                     count += 1
     assert count > 1000

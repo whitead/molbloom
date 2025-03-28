@@ -103,6 +103,8 @@ def buy(smiles, catalog="zinc-instock", canonicalize=False, check_common=True):
     _load_filter(catalog)
     if canonicalize:
         smiles = canon(smiles)
+        if not smiles:
+            return False
     if check_common and smiles in _common:
         return True
     return smiles in _filters[catalog]
