@@ -59,6 +59,8 @@ int main(int argc, char *argv[])
       i += 1;
       if (i % 10000 == 0)
         printf("\r%u", i);
+      // remove newline character
+      line[strcspn(line, "\n")] = 0;
       // read to first space
       token = strtok(line, " ");
       bloom_add(b, token);

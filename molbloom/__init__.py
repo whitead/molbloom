@@ -22,7 +22,7 @@ _descriptions = {
 _DEFAULT_PATH = os.path.join(os.path.expanduser("~"), ".cache", "molbloom")
 _filter_urls = {
     "zinc20": "https://www.dropbox.com/s/mvn1ij9ooq5ikk9/zinc20.bloom?dl=1",
-    "zinc-instock": "https://www.dropbox.com/s/9g5ywc2n4tzev1m/instock.bloom?dl=1",
+    "zinc-instock": "https://www.dropbox.com/scl/fi/vrbo5sxxr30kvg1k1m4r7/zinc-instock.bloom?rlkey=w6q8tumnkv7pqffyyq5ujzi04&st=03tcxa3i&dl=1",
     "zinc-instock-mini": None,
     "surechembl": "https://www.dropbox.com/s/f6m2wjxq42avl50/sureblcanon.bloom?dl=1",
 }
@@ -66,14 +66,15 @@ def _load_filter(name):
             _load_big_filter(name)
 
 
-def canon(smiles):
+def canon(smiles: str) -> str | None:
     try:
         from rdkit import Chem
     except ImportError:
         raise ImportError("To canonicalize SMILES, rdkit is required.")
-    return Chem.MolToSmiles(
-        Chem.MolFromSmiles(smiles), canonical=True, isomericSmiles=True
-    )
+    m = Chem.MolFromSmiles(smiles)
+    if m is None:
+        return None
+    return Chem.MolToSmiles(m, canonical=True, isomericSmiles=True, kekuleSmiles=True)
 
 
 def catalogs():
@@ -102,6 +103,8 @@ def buy(smiles, catalog="zinc-instock", canonicalize=False, check_common=True):
     _load_filter(catalog)
     if canonicalize:
         smiles = canon(smiles)
+        if not smiles:
+            return False
     if check_common and smiles in _common:
         return True
     return smiles in _filters[catalog]

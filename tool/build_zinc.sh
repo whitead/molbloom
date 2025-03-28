@@ -8,7 +8,7 @@ if [ "$GET_ZINC" = "y" ]; then
     echo "All ZINC or instock only? (a/i)"
     read ZINC_TYPE
 
-    if [ "$GET_ZINC" = "a" ]; then
+    if [ "$ZINC_TYPE" = "a" ]; then
 
         echo "Downloading ZINC20"
         for i in `seq 1 20`; do wget https://files.docking.org/zinc20-ML/smiles/ZINC20_smiles_chunk_$i.tar.gz; done;
@@ -20,7 +20,7 @@ if [ "$GET_ZINC" = "y" ]; then
         for i in `seq 1 20`; do rm ZINC20_smiles_chunk_$i.tar.gz; done;
     else
         echo "Downloading ZINC20 instock"
-        for i in `cat instock.txt`; do wget $i; done;
+        for i in `cat instock.txt`; do wget $(echo $i | tr -d '\r\n'); done;
 
         echo "Removing headers"
         for i in *smi; do sed -i '1d' $i; done;
@@ -30,7 +30,6 @@ else
     echo "What directory is ZINC in?"
     read ZINC_DIR
 fi
-
 
 echo "Resetting Filter"
 rm -rf main.bloom

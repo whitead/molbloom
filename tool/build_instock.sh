@@ -18,9 +18,11 @@ else
     read ZINC_DIR
 fi
 
+echo "Don't forget to canonicalize the SMILES!"
 
 echo "Resetting Filter"
 rm -rf instock.bloom
 
 echo "Building Filter"
-./molbloom-bloom 10 instock 9227726 `ls ${ZINC_DIR}/*smi`
+./molbloom-bloom 100 zinc-instock 9227726 `ls ${ZINC_DIR}/*_canonical.smi`
+./molbloom-bloom 10 zinc-instock-mini 9227726 `ls ${ZINC_DIR}/*_canonical.smi`
