@@ -66,14 +66,15 @@ def _load_filter(name):
             _load_big_filter(name)
 
 
-def canon(smiles):
+def canon(smiles: str) -> str | None:
     try:
         from rdkit import Chem
     except ImportError:
         raise ImportError("To canonicalize SMILES, rdkit is required.")
-    return Chem.MolToSmiles(
-        Chem.MolFromSmiles(smiles), canonical=True, isomericSmiles=True
-    )
+    m = Chem.MolFromSmiles(smiles)
+    if m is None:
+        return None
+    return Chem.MolToSmiles(m, canonical=True, isomericSmiles=True, kekuleSmiles=True)
 
 
 def catalogs():
