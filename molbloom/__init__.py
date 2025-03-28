@@ -22,7 +22,7 @@ _descriptions = {
 _DEFAULT_PATH = os.path.join(os.path.expanduser("~"), ".cache", "molbloom")
 _filter_urls = {
     "zinc20": "https://www.dropbox.com/s/mvn1ij9ooq5ikk9/zinc20.bloom?dl=1",
-    "zinc-instock": "https://www.dropbox.com/s/9g5ywc2n4tzev1m/instock.bloom?dl=1",
+    "zinc-instock": "https://www.dropbox.com/scl/fi/vrbo5sxxr30kvg1k1m4r7/zinc-instock.bloom?rlkey=w6q8tumnkv7pqffyyq5ujzi04&st=03tcxa3i&dl=1",
     "zinc-instock-mini": None,
     "surechembl": "https://www.dropbox.com/s/f6m2wjxq42avl50/sureblcanon.bloom?dl=1",
 }
