@@ -6,7 +6,7 @@
 #include <inttypes.h>
 
 
-#define VERSION "0.4.0"
+#define VERSION "2.3.3"
 #define FILE_VERSION 2u
 #define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define max(X, Y) (((X) > (Y)) ? (X) : (Y))
