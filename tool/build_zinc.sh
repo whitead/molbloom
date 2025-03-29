@@ -18,6 +18,9 @@ if [ "$GET_ZINC" = "y" ]; then
 
         echo "Removing ZINC20 tarballs"
         for i in `seq 1 20`; do rm ZINC20_smiles_chunk_$i.tar.gz; done;
+
+        echo "Renaming files"
+        find . -name "*.txt" -exec bash -c 'cp "$1" "${1%.txt}.smi"' _ {} \;
     else
         echo "Downloading ZINC20 instock"
         for i in `cat instock.txt`; do wget $(echo $i | tr -d '\r\n'); done;

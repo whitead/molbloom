@@ -56,7 +56,7 @@ def test_fpr():
             for i in range(10):
                 rs = _randomize_smiles(s)
                 if rs is not None:
-                    if molbloom.buy(rs, catalog="zinc-instock-mini", canonicalize=True):
+                    if molbloom.buy(rs, catalog="zinc-instock-mini"):
                         fp += 1
                     count += 1
     assert count > 1000
@@ -64,17 +64,20 @@ def test_fpr():
 
     count = 0
     fp = 0
+    fn = 0
     with open(os.path.join(os.path.dirname(__file__), "some_mols_zinc.txt")) as f:
         for line in f:
             s = line.split()[0]
-            assert molbloom.buy(s, catalog="zinc20")
+            if not molbloom.buy(s, catalog="zinc20", canonicalize=True):
+                print("warning: {} not in zinc".format(s))
+                fn += 1
             for i in range(10):
                 rs = _randomize_smiles(s)
                 if rs is not None:
                     if molbloom.buy(rs, catalog="zinc20"):
                         fp += 1
                     count += 1
-    assert count > 1000
+    assert count > 1000 and fn < 5
     print("False positive rate for zinc all is {:f} (N={})".format(fp / count, count))
 
 

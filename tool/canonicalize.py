@@ -20,6 +20,9 @@ def process_smiles_file(file_path):
     with open(output_path, "w") as f:
         f.writelines([c + "\n" for c in canonical_smiles if c])
 
+    # Delete the original file after successful canonicalization
+    os.remove(input_path)
+
     return (str(input_path), str(output_path), True)
 
 
@@ -31,7 +34,7 @@ def apply_canonical_transformation(smiles_data):
 
 def process_smiles_files(file_list, num_processes=None):
     if num_processes is None:
-        num_processes = mp.cpu_count()
+        num_processes = mp.cpu_count() - 2
 
     pool = mp.Pool(processes=num_processes)
     start_time = time.time()
