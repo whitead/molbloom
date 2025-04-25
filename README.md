@@ -73,7 +73,7 @@ You can also build a filter using python as follows:
 
 ```py
 from molbloom import CustomFilter, canon
-bf = CustomFilter(100, 1000, 'myfilter')
+bf = CustomFilter(size=100, n=1000, name='myfilter')
 bf.add('CCCO')
 # canonicalize one record
 s = canon("CCCOC")
