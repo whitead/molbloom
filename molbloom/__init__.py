@@ -39,8 +39,7 @@ def _download_progress(count, block_size, total_size):
 def _load_big_filter(name):
     # check if it's present
     filter_path = os.path.join(_DEFAULT_PATH, f"{name}.bloom")
-    if not os.path.exists(_DEFAULT_PATH):
-        os.makedirs(_DEFAULT_PATH)
+    os.makedirs(_DEFAULT_PATH, exist_ok=True)
     if not os.path.exists(filter_path):
         print(f"Starting {name} download to cache directory {_DEFAULT_PATH}")
         import urllib.request
