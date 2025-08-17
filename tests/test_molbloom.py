@@ -59,7 +59,7 @@ def test_fpr():
                     if molbloom.buy(rs, catalog="zinc-instock-mini"):
                         fp += 1
                     count += 1
-    assert count > 1000
+    assert count > 1000 and fp / count < 0.1
     print("False positive rate for instock mini {:f} (N={})".format(fp / count, count))
 
     count = 0
@@ -77,7 +77,7 @@ def test_fpr():
                     if molbloom.buy(rs, catalog="zinc20"):
                         fp += 1
                     count += 1
-    assert count > 1000 and fn < 5
+    assert count > 1000 and fn == 0
     print("False positive rate for zinc all is {:f} (N={})".format(fp / count, count))
 
 
