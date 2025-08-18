@@ -81,7 +81,7 @@ def catalogs():
     return _descriptions
 
 
-def buy(smiles, catalog="zinc-instock", canonicalize=False, check_common=True):
+def buy(smiles, catalog="zinc-instock", canonicalize=True, check_common=True):
     """Returns True if the SMILES is probably in the catalog, False if it is definitely not
 
     Parameters
