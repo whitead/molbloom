@@ -30,7 +30,7 @@ setup(
     url="https://whitead.github.io/molbloom/",
     license="MIT",
     package_data={"molbloom": ["data/*.bloom"]},
-    install_requires=["importlib_resources"],
+    install_requires=["importlib_resources", "rdkit"],
     setup_requires=["cython"],
     packages=["molbloom"],
     long_description=long_description,

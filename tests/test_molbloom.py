@@ -28,7 +28,7 @@ def test_example():
     assert not molbloom.buy(
         "c1c(c(c1)C(=O)OCC[C@@H]2CCCC[NH2+]2)", catalog="zinc20", canonicalize=True
     )
-    assert not molbloom.buy("ZZZ", catalog="zinc-instock-mini")
+    assert not molbloom.buy("ZZZ", catalog="zinc-instock-mini", canonicalize=False)
 
 
 def test_common():
@@ -40,7 +40,10 @@ def test_alot():
     import timeit
 
     r = timeit.timeit(
-        lambda: molbloom.buy("Nc1ccn([C@H]2OC(CO)=C[C@@H]2O)c(=O)n1"), number=100000
+        lambda: molbloom.buy(
+            "Nc1ccn([C@H]2OC(CO)=C[C@@H]2O)c(=O)n1", canonicalize=False
+        ),
+        number=100000,
     )
     print("Timing per call: {:.0f}ns".format(r / 100000 * 1e9))
 
@@ -56,7 +59,9 @@ def test_fpr():
             for i in range(10):
                 rs = _randomize_smiles(s)
                 if rs is not None:
-                    if molbloom.buy(rs, catalog="zinc-instock-mini"):
+                    if molbloom.buy(
+                        rs, catalog="zinc-instock-mini", canonicalize=False
+                    ):
                         fp += 1
                     count += 1
     assert count > 1000 and fp / count < 0.1
@@ -74,7 +79,7 @@ def test_fpr():
             for i in range(10):
                 rs = _randomize_smiles(s)
                 if rs is not None:
-                    if molbloom.buy(rs, catalog="zinc20"):
+                    if molbloom.buy(rs, catalog="zinc20", canonicalize=False):
                         fp += 1
                     count += 1
     assert count > 1000 and fn == 0
