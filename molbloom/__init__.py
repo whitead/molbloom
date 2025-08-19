@@ -3,7 +3,7 @@ from molbloom.bloom import BloomFilter, CustomFilter
 import os
 import molbloom.data
 from importlib_resources import files
-from dataclasses import dataclass
+from rdkit import Chem
 from .common import _common
 
 _filters = {
@@ -66,10 +66,6 @@ def _load_filter(name):
 
 
 def canon(smiles: str) -> str | None:
-    try:
-        from rdkit import Chem
-    except ImportError:
-        raise ImportError("To canonicalize SMILES, rdkit is required.")
     m = Chem.MolFromSmiles(smiles)
     if m is None:
         return None
