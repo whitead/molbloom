@@ -16,7 +16,7 @@ _descriptions = {
     "zinc20": "All ZINC20 (1,006,651,037 mols) from Oct 2021. FPR of 0.003. Requires download",
     "zinc-instock": "ZINC20 instock (9,227,726 mols). FPR of 0.0003. Requires download",
     "zinc-instock-mini": "ZINC20 instock (9,227,726 mols). FPR of 0.07. Included in package",
-    "surechembl": "SureChEMBL (22,843,364 mols). FPR of 0.000025. Requires download",
+    "surechembl": "SureChEMBL (30,892,168 mols). FPR of 0.000025. Requires download",
 }
 # just put in .cache
 _DEFAULT_PATH = os.path.join(os.path.expanduser("~"), ".cache", "molbloom")
@@ -24,7 +24,7 @@ _filter_urls = {
     "zinc20": "https://www.dropbox.com/scl/fi/4y3979xonia1ifjdro4ib/zinc20-new.bloom?rlkey=mi8sbbm4qrc9y0v1ssc29o2nd&st=c8iukvsp&dl=1",
     "zinc-instock": "https://www.dropbox.com/scl/fi/vrbo5sxxr30kvg1k1m4r7/zinc-instock.bloom?rlkey=w6q8tumnkv7pqffyyq5ujzi04&st=03tcxa3i&dl=1",
     "zinc-instock-mini": None,
-    "surechembl": "https://www.dropbox.com/scl/fi/uohoz2pejyis1ldk16avh/sure-chembl.bloom?rlkey=rsgzbkxelkiog3r0k1aw93jdt&st=xmz9mbm3&dl=1",
+    "surechembl": "https://www.dropbox.com/scl/fi/k1wp1lyt1iuftc401v33d/sure-chembl-2026.bloom?rlkey=h0ob1mhqhvat1rvalxh8hubj5&st=k3uamfy2&dl=1",
 }
 
 
