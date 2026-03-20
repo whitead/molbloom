@@ -27,7 +27,7 @@ setup(
     description="Purchaseable SMILES filter",
     author="Andrew White",
     author_email="andrew.white@rochester.edu",
-    url="https://whitead.github.io/molbloom/",
+    url="https://github.com/whitead/molbloom",
     license="MIT",
     package_data={"molbloom": ["data/*.bloom"]},
     install_requires=["importlib_resources", "rdkit"],
