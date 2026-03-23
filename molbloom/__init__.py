@@ -1,10 +1,13 @@
 from .version import __version__
 from molbloom.bloom import BloomFilter, CustomFilter
 import os
+import logging
 import molbloom.data
 from importlib_resources import files
 from rdkit import Chem
 from .common import _common
+
+logger = logging.getLogger(__name__)
 
 _filters = {
     "zinc20": None,
@@ -30,10 +33,7 @@ _filter_urls = {
 
 def _download_progress(count, block_size, total_size):
     percent = int(count * block_size * 100 / total_size)
-    print("\r", end="")
-    print("Downloading filter... {:d}%".format(percent), end="")
-    if percent >= 100:
-        print("")
+    logger.info("Downloading filter... {:d}%".format(percent))
 
 
 def _load_big_filter(name):
@@ -41,7 +41,7 @@ def _load_big_filter(name):
     filter_path = os.path.join(_DEFAULT_PATH, f"{name}.bloom")
     os.makedirs(_DEFAULT_PATH, exist_ok=True)
     if not os.path.exists(filter_path):
-        print(f"Starting {name} download to cache directory {_DEFAULT_PATH}")
+        logger.info(f"Starting {name} download to cache directory {_DEFAULT_PATH}")
         import urllib.request
 
         urllib.request.urlretrieve(
